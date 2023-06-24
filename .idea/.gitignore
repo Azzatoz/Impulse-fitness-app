@@ -1,0 +1,5 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# version with accelerometer and etc.
+# in next version will try use only gameRotationVectorValues

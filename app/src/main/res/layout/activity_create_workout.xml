@@ -1,0 +1,88 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/todo3"
+        android:scaleType="centerCrop"
+        android:src="@drawable/light_blue"
+        tools:ignore="ImageContrastCheck"
+        tools:layout_editor_absoluteX="60dp"
+        tools:layout_editor_absoluteY="54dp" />
+
+    <EditText
+        android:id="@+id/create_name_training"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:autofillHints="Первая Тренировка"
+        android:hint="@string/Name_of_training"
+        android:inputType="textAutoCorrect"
+        android:minHeight="48dp"
+        android:textColorHint="#D8D2CB"
+        android:backgroundTint="#DCD7D1"
+        tools:ignore="VisualLintTextFieldSize" />
+
+    <EditText
+        android:id="@+id/create_description_training"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="90dp"
+        android:layout_marginRight="16dp"
+        android:hint="@string/Enter_description_optional"
+        android:inputType="text"
+        android:minHeight="48dp"
+        android:textColorHint="#D8D2CB"
+        android:backgroundTint="#DCD7D1"
+        android:gravity="top|start"
+        tools:ignore="VisualLintTextFieldSize" />
+
+
+    <Button
+        android:id="@+id/startButton"
+        android:layout_width="300dp"
+        android:layout_height="78dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="55dp"
+        android:layout_marginEnd="55dp"
+        android:layout_marginBottom="200dp"
+        android:backgroundTint="#99654B83"
+        android:text="@string/start"
+        android:textColor="#E4E4E4"
+        android:textSize="24sp"
+        tools:ignore="VisualLintButtonSize" />
+
+    <Button
+        android:id="@+id/customButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="100dp"
+        android:background="@drawable/rounded_button"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="@string/x"
+        android:textColor="#283593"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+
+    <TextView
+        android:id="@+id/countdownTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="100sp"
+        android:textColor="#000000"
+        android:layout_centerInParent="true"/>
+
+</RelativeLayout>
