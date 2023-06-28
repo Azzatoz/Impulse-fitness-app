@@ -11,31 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/MyAppTheme"
         tools:targetApi="31">
-
         <activity
-            android:name=".additional_files.LoadingScreen"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="false"
-            android:label="@string/title_activity_record_of_training"
-            android:theme="@style/Theme.MyDiplom_try2.Fullscreen" />
-
-        <activity
-            android:name=".makingYourOwnTraining.MainRecordOfTraining"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="false"
-            android:label="@string/title_activity_record_of_training"
-            android:theme="@style/Theme.MyDiplom_try2.Fullscreen" />
-        <activity
-            android:name=".tabs.CreateWorkout"
-            android:exported="false" />
-        <activity
-            android:name=".tabs.MainStatistics"
-            android:exported="false" />
-        <activity
-            android:name=".tabs.Settings"
-            android:exported="false" />
-        <activity
-            android:name=".tabs.MainActivity"
+            android:name=".tabs.MenuActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,10 +21,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".tabs.StatisticsOfSquats"
+            android:name=".additional_files.LoadingScreen"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_record_of_training"
+            android:theme="@style/MyAppTheme" />
+        <activity
+            android:name=".makingYourOwnTraining.MainRecordOfTraining"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_record_of_training"
+            android:theme="@style/MyAppTheme" />
+        <activity
+            android:name=".tabs.CreateWorkout"
             android:exported="false" />
         <activity
-            android:name=".tabs.ExerciseSelectionMenu"
+            android:name=".tabs.Statistics"
+            android:exported="false" />
+        <activity
+            android:name=".tabs.Settings"
+            android:exported="false" />
+        <activity
+            android:name=".tabs.Profile"
+            android:exported="true" />
+        <activity
+            android:name=".tabs.StatisticsOfSquats"
             android:exported="false" />
         <activity
             android:name=".tabs.ExerciseStartSquatsActivity"

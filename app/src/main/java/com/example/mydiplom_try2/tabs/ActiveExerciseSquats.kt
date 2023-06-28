@@ -21,6 +21,7 @@ import java.util.Date
 import java.util.Locale
 
 
+@Suppress("DEPRECATION")
 class ActiveExerciseSquats : AppCompatActivity(), SensorEventListener {
 
     private lateinit var sensorManager: SensorManager

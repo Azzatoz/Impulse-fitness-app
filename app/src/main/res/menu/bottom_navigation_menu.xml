@@ -1,0 +1,27 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_trainings"
+        android:title="@string/workout"
+        android:icon="@drawable/settings" />
+
+    <item
+        android:id="@+id/action_statistics"
+        android:title="@string/statistics"
+        android:icon="@drawable/statistics" />
+
+    <item
+        android:id="@+id/action_create_training"
+        android:title="@string/CreateWorkout"
+        android:icon="@drawable/add_in_square" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/settings"
+        android:icon="@drawable/settings" />
+
+    <item
+        android:id="@+id/action_profile"
+        android:title="@string/profile"
+        android:icon="@drawable/user" />
+
+</menu>

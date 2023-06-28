@@ -34,7 +34,7 @@ class StatisticsOfSquats : AppCompatActivity() {
         cancelButton.setOnClickListener {
             soundManager.playSound()
             val intent = Intent(
-                this, MainActivity::class.java) // перенаправляет нажатием на MainMenu
+                this, Profile::class.java) // перенаправляет нажатием на MainMenu
             startActivity(intent)
         }
 

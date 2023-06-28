@@ -1,7 +1,0 @@
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#CB489390" /> <!-- Цвет фона кнопки -->
-    <stroke
-        android:color="#ffffff"
-        android:width="2dp" /> <!-- Измените значение на желаемую толщину обводки -->
-    <corners android:radius="2dp" /> <!-- Закругление углов кнопки -->
-</shape>

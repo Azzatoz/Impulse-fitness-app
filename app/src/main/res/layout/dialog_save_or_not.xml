@@ -45,7 +45,7 @@
             android:backgroundTint="#4E42BA"
             android:shadowColor="#C4FFFFFF"
             android:text="@string/Save"
-            android:textColor="#0277BD" />
+            android:textColor="#81D4FA" />
 
         <Button
             android:id="@+id/button_discard"

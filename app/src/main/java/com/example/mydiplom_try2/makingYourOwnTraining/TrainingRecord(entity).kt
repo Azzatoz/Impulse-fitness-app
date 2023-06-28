@@ -4,29 +4,17 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "first_table")
-
+@Entity(tableName = "training_record")
 data class TrainingRecord(
     @PrimaryKey(autoGenerate = true)
-    var id: Long = 0,
-
+    val id: Long = 0,
     val tableName: String,
-
-    @ColumnInfo(name = "date")
-    var date: Long = 0,
-
-    @ColumnInfo(name = "duration")
-    var duration: Long = 0,
-
-    @ColumnInfo(name = "accelerometer_data")
-    var accelerometerData: List<Float> = listOf(),
-
-    @ColumnInfo(name = "gyroscope_data")
-    var gyroscopeData: List<Float> = listOf(),
-
-    @ColumnInfo(name = "magnetometer_data")
-    var magnetometerData: List<Float> = listOf(),
+    val date: Long,
+    val duration: Long,
+    val gameRotationVectorData: List<Float>
 )
+
+
 
 
 

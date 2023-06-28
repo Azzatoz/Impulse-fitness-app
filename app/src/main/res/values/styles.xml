@@ -1,19 +1,60 @@
 <resources>
 
+    <!-- Стиль виджета для полноэкранного действия панели действий.
+     Определяет фоновый цвет панели действий в полноэкранном режиме. -->
     <style name="Widget.Theme.MyDiplom_try2.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">#000000</item>
+    </style>
+
+    <!-- Стиль виджета для полноэкранной панели кнопок.
+         Определяет фоновый цвет панели кнопок в полноэкранном режиме
+         и использует стиль кнопок, заданный в атрибуте buttonBarStyle. -->
+    <style name="Widget.Theme.MyDiplom_try2.ButtonBar.Fullscreen" parent="">
+        <item name="android:background">#000000</item>
+        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
+    </style>
+
+    <!-- Дополнительные настройки стиля темы -->
+    <style name="MyButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">#94021715</item>
+        <item name="android:background">#ffffff</item>
+        <item name="android:autoSizeMinTextSize">8sp</item>
+        <item name="android:autoSizeMaxTextSize">14sp</item>
+        <!-- Другие атрибуты стиля кнопки -->
+    </style>
+
+    <!-- Стиль заголовка -->
+    <style name="MyTitleTextStyle" parent="android:TextAppearance">
+        <!-- Определите атрибуты стиля текста -->
+        <item name="android:textColor">#000000</item>
+        <item name="android:textSize">24sp</item>
+        <!-- Другие атрибуты стиля текста -->
+    </style>
+
+    <!-- Стиль текста -->
+    <style name="MyTextStyle" parent="android:TextAppearance">
+        <!-- Определите атрибуты стиля текста -->
+        <item name="android:textColor">#454040</item>
+        <item name="android:textSize">14sp</item>
+        <!-- Другие атрибуты стиля текста -->
+    </style>
+
+    <!-- Стиль фона -->
+    <style name="MyBackgroundStyle">
+        <!-- Определите атрибуты стиля фона -->
+        <item name="android:background">@drawable/gradient_background</item>
+        <!-- Другие атрибуты стиля фона -->
+    </style>
+
+
+    <!-- Стиль панели действий в полноэкранном режиме -->
+    <style name="Widget.MyAppTheme.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@color/black_overlay</item>
     </style>
 
-    <style name="Widget.Theme.MyDiplom_try2.ButtonBar.Fullscreen" parent="">
+    <!-- Стиль панели кнопок в полноэкранном режиме -->
+    <style name="Widget.MyAppTheme.ButtonBar.Fullscreen" parent="Widget.AppCompat.ButtonBar">
         <item name="android:background">@color/black_overlay</item>
-        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
-    </style>
-    <style name="MyAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Остальные атрибуты темы -->
-        <item name="colorPrimary">#FF0000</item>
-        <item name="colorPrimaryDark">#990000</item>
-        <item name="colorAccent">#00FF00</item>
-        <!-- Дополнительные настройки стиля темы -->
     </style>
 
 </resources>

@@ -11,8 +11,18 @@ interface TrainingDao {
     @Update
     fun update(training: TrainingRecord)
 
-//    @Query("DELETE FROM my database")
-//    fun deleteAll()
+    @Query("SELECT * FROM training_record")
+    fun getAll(): List<TrainingRecord>
 
+    @Query("SELECT * FROM training_record WHERE tableName = :tableName")
+    fun getByTableName(tableName: String): List<TrainingRecord>
+
+    // Дополнительные методы, которые вы хотите добавить
+    // ...
+
+    @Delete
+    fun delete(training: TrainingRecord)
+
+    @Query("DELETE FROM training_record")
+    fun deleteAll()
 }
-

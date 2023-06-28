@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:contentDescription="@string/background"
         android:scaleType="centerCrop"
-        android:src="@drawable/background_generated"
+        android:src="@drawable/gradient_background"
         tools:ignore="ImageContrastCheck" />
 
     <TextView

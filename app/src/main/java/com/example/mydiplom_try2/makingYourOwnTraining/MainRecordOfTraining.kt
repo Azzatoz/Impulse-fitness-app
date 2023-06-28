@@ -5,7 +5,6 @@ import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
-import android.hardware.SensorManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -15,105 +14,80 @@ import android.widget.Chronometer
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.mydiplom_try2.tabs.CreateWorkout
 import com.example.mydiplom_try2.R
+import com.example.mydiplom_try2.additional_files.SensorManagerHelper
+import com.example.mydiplom_try2.additional_files.TrainingTimer
+import com.example.mydiplom_try2.tabs.CreateWorkout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
 class MainRecordOfTraining : AppCompatActivity(), SensorEventListener {
-
-    private lateinit var sensorManager: SensorManager
-    private lateinit var accelerometer: Sensor
-    private lateinit var gyroscope: Sensor
-    private lateinit var magnetometer: Sensor
+    private lateinit var sensorManagerHelper: SensorManagerHelper
     private lateinit var gameRotationVector: Sensor
-
-    private var accelerometerValues = FloatArray(3)
-    private var gyroscopeValues = FloatArray(3)
-    private var magnetometerValues = FloatArray(3)
     private var gameRotationVectorValues = FloatArray(3)
-
-    private var isRunning: Boolean = false
     private lateinit var chronometer: Chronometer
     private lateinit var finishButton: Button
     private lateinit var countDownTextView: TextView
-
     private lateinit var tableName: String
     private lateinit var trainingDao: TrainingDao
-
-
+    private lateinit var trainingTimer: TrainingTimer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_record_of_training)
-        supportActionBar?.hide() // скрыть заголовок
+        supportActionBar?.hide() // Скрыть заголовок
 
-        // получаем имя таблицы/бд
+        // Получаем имя таблицы/базы данных
         tableName = intent.getStringExtra("tableName") ?: ""
-
         chronometer = findViewById(R.id.chronometer)
         finishButton = findViewById(R.id.finishButton)
         countDownTextView = findViewById(R.id.countdownTextView)
-
-        sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
-        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-        gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
-        magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
-        gameRotationVector = sensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR)
-
+        sensorManagerHelper = SensorManagerHelper(this)
+        gameRotationVector = sensorManagerHelper.getGameRotationVectorSensor()
         trainingDao = TrainingRoomDatabase.getInMemoryDatabase(this).trainingDao()
+        trainingTimer = TrainingTimer(chronometer, countDownTextView, sensorManagerHelper, this)
 
-        // Start countdown before starting the chronometer
+        // Начинаем обратный отсчет перед запуском хронометра
         Handler(Looper.getMainLooper()).postDelayed( {
-            startChronometer()
+            trainingTimer.startChronometer()
             countDownTextView.text = ""
-            registerSensors()
+            trainingTimer.startCountdown()
         }, 500)
-
         finishButton.setOnClickListener {
-            if (isRunning) {
-                stopChronometer() // стоп секундомер
-                unregisterSensors() // стоп датчики
+            if (trainingTimer.isRunning()) {
+                trainingTimer.stopChronometer() // Останавливаем секундомер
+                unregisterSensors() // Отключаем датчики
                 showDialog()
             }
         }
     }
-
+    // Отображение диалогового окна
     private fun showDialog() {
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.dialog_save_or_not)
-
         val buttonSave = dialog.findViewById<Button>(R.id.button_save)
         val buttonDiscard = dialog.findViewById<Button>(R.id.button_discard)
         dialog.show()
-
         buttonSave.setOnClickListener {
             saveRecord()
             dialog.dismiss() // Закрыть диалоговое окно
         }
-
         buttonDiscard.setOnClickListener {
             dialog.dismiss()
             val intent = Intent(this@MainRecordOfTraining, CreateWorkout::class.java)
             startActivity(intent)
-
         }
-
         dialog.setOnDismissListener {
             unregisterSensors() // Вызов unregisterSensors() при закрытии диалогового окна
         }
     }
-
+    // Сохранение записи тренировки
     private fun saveRecord() {
         val trainingRecord = TrainingRecord(
             tableName = tableName,
             date = System.currentTimeMillis(),
             duration = (SystemClock.elapsedRealtime() - chronometer.base) / 1000,
-            accelerometerData = accelerometerValues.toList(),
-            gyroscopeData = gyroscopeValues.toList(),
-            magnetometerData = magnetometerValues.toList(),
+            gameRotationVectorData = gameRotationVectorValues.toList()
         )
-
         CoroutineScope(Dispatchers.IO).launch {
             trainingDao.insert(trainingRecord)
             runOnUiThread {
@@ -127,63 +101,24 @@ class MainRecordOfTraining : AppCompatActivity(), SensorEventListener {
             startActivity(intent)
         }
     }
-
     override fun onResume() {
         super.onResume()
         registerSensors()
     }
-
     override fun onPause() {
         super.onPause()
         unregisterSensors()
     }
-
-    override fun onSensorChanged(event: SensorEvent?) {
-        when (event?.sensor?.type) {
-            Sensor.TYPE_ACCELEROMETER -> accelerometerValues = event.values.clone()
-            Sensor.TYPE_GYROSCOPE -> gyroscopeValues = event.values.clone()
-            Sensor.TYPE_MAGNETIC_FIELD -> magnetometerValues = event.values.clone()
-            Sensor.TYPE_GAME_ROTATION_VECTOR -> gameRotationVectorValues = event.values.clone()
+    override fun onSensorChanged(event: SensorEvent) {
+        if (event.sensor.type == Sensor.TYPE_GAME_ROTATION_VECTOR) {
+            gameRotationVectorValues = event.values.clone()
         }
     }
-
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
-
     private fun registerSensors() {
-        sensorManager.registerListener(
-            this,
-            accelerometer,
-            SensorManager.SENSOR_DELAY_GAME
-        )
-        sensorManager.registerListener(
-            this,
-            gyroscope,
-            SensorManager.SENSOR_DELAY_GAME
-        )
-        sensorManager.registerListener(
-            this,
-            magnetometer,
-            SensorManager.SENSOR_DELAY_GAME
-        )
-        sensorManager.registerListener(
-            this,
-            gameRotationVector,
-            SensorManager.SENSOR_DELAY_GAME
-        )
+        sensorManagerHelper.registerSensorEventListener(this)
     }
-
     private fun unregisterSensors() {
-        sensorManager.unregisterListener(this)
-    }
-
-    private fun startChronometer() {
-        chronometer.base = SystemClock.elapsedRealtime()
-        chronometer.start()
-        isRunning = true
-    }
-
-    private fun stopChronometer() {
-        chronometer.stop()
-        isRunning = false
+        sensorManagerHelper.unregisterSensorEventListener(this)
     }
 }

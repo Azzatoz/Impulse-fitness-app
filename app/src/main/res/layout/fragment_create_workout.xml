@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:contentDescription="@string/todo3"
         android:scaleType="centerCrop"
-        android:src="@drawable/light_blue"
+        android:src="@drawable/gradient_background"
         tools:ignore="ImageContrastCheck"
         tools:layout_editor_absoluteX="60dp"
         tools:layout_editor_absoluteY="54dp" />
