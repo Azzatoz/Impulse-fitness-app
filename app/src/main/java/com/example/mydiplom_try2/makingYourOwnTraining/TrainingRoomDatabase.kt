@@ -4,11 +4,12 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-@Database(entities = [TrainingRecord::class], version = 2, exportSchema = false)
-@TypeConverters(FloatListTypeConverter::class)
+@Database(entities = [TrainingRecord::class], version = 1, exportSchema = false)
 abstract class TrainingRoomDatabase : RoomDatabase() {
 
     abstract fun trainingDao(): TrainingDao
@@ -17,64 +18,34 @@ abstract class TrainingRoomDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: TrainingRoomDatabase? = null
 
-        fun getInMemoryDatabase(context: Context): TrainingRoomDatabase {
-            return Room.inMemoryDatabaseBuilder(
-                context.applicationContext,
-                TrainingRoomDatabase::class.java
-            )
-                .addCallback(object : Callback() {
-                    override fun onCreate(db: SupportSQLiteDatabase) {
-                        super.onCreate(db)
-
-                        // создание таблицы
-                        db.execSQL("CREATE TABLE IF NOT EXISTS training_table (training_name TEXT PRIMARY KEY, training_sets TEXT)")
-                    }
-                })
-                .build()
+        fun getDatabase(
+            context: Context,
+            scope: CoroutineScope
+        ): TrainingRoomDatabase {
+            return INSTANCE ?: synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context.applicationContext,
+                    TrainingRoomDatabase::class.java,
+                    "training_database"
+                )
+                    .addCallback(TrainingDatabaseCallback(scope))
+                    .build()
+                INSTANCE = instance
+                instance
+            }
         }
 
-//        fun getDatabase(context: Context, tableName: String): TrainingRoomDatabase {
-//            return INSTANCE ?: synchronized(this) {
-//                val instance = Room.databaseBuilder(
-//                    context.applicationContext,
-//                    TrainingRoomDatabase::class.java,
-//                    tableName // имя базы данных
-//                ).addCallback(object : Callback() {
-//                    override fun onCreate(db: SupportSQLiteDatabase) {
-//                        super.onCreate(db)
-//
-//                        // создание таблицы
-//                        db.execSQL("CREATE TABLE IF NOT EXISTS $tableName (training_name TEXT PRIMARY KEY, training_sets TEXT)")
-//                    }
-//                }).allowMainThreadQueries().build()
-//                INSTANCE = instance
-//                instance
-//            }
-//        }
+        private class TrainingDatabaseCallback(
+            private val scope: CoroutineScope
+        ) : RoomDatabase.Callback() {
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                super.onCreate(db)
+                INSTANCE?.let { database ->
+                    scope.launch(Dispatchers.IO) {
+                        (database.trainingDao())
+                    }
+                }
+            }
+        }
     }
-
-//    override fun clearAllTables() {
-//        runInTransaction {
-//            trainingDao().deleteAll()
-//        }
-//    }
 }
-
-//        fun getDatabase(context: Context, tableName: String): TrainingRoomDatabase {
-//            return INSTANCE ?: synchronized(this) {
-//                val instance = Room.databaseBuilder(
-//                    context.applicationContext,
-//                    TrainingRoomDatabase::class.java,
-//                    tableName // имя базы данных
-//                ).addCallback(object : Callback() {
-//                    override fun onCreate(db: SupportSQLiteDatabase) {
-//                        super.onCreate(db)
-//                        db.execSQL("CREATE TABLE IF NOT EXISTS $tableName (training_name TEXT PRIMARY KEY, training_sets TEXT)")
-//                    }
-//                }).allowMainThreadQueries().build()
-//                INSTANCE = instance
-//                instance
-//            }
-//        }
-//    }
-//}

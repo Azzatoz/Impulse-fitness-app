@@ -2,10 +2,15 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+
 }
+
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
     namespace 'com.example.mydiplom_try2'
+
     compileSdk 33
 
     defaultConfig {
@@ -15,7 +20,7 @@ android {
         renderscriptTargetApi 19
         renderscriptSupportModeEnabled true
         versionCode 1
-        versionName "1.0"
+        versionName "1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -27,25 +32,53 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     buildFeatures {
         viewBinding true
     }
-    kotlin {
-        jvmToolchain(8)
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11.toString()
+    }
+
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions {
+        jvmTarget = "11"
     }
 }
 
+kapt {
+    arguments {
+        arg("room.schemaLocation", "projectDir/schemas")
+    }
+    javacOptions {
+        option("-source", "11")
+        option("-target", "11")
+    }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
 
 dependencies {
-    implementation "androidx.room:room-runtime:2.5.2"
-    implementation "androidx.room:room-ktx:2.5.2"
-    kapt "androidx.room:room-compiler:2.5.2"
+    annotationProcessor "androidx.room:room-compiler:2.4.2"
+    implementation 'javax.annotation:javax.annotation-api:1.3.2'
+    implementation "androidx.room:room-runtime:2.4.2"
+    kapt "androidx.room:room-compiler:2.4.2"
+    implementation "androidx.room:room-ktx:2.4.2"
+    implementation 'androidx.room:room-common:2.4.2'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1"
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.4.1"
+    // Kotlin components
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'

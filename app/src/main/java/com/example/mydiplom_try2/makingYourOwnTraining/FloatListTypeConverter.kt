@@ -24,4 +24,14 @@ class FloatListTypeConverter {
         val type = object : TypeToken<List<Float>>() {}.type
         return gson.fromJson<List<Float>>(floatListString, type)
     }
+
+    @TypeConverter
+    fun fromLong(value: Long?): String? {
+        return value?.toString()
+    }
+
+    @TypeConverter
+    fun toLong(valueString: String?): Long? {
+        return valueString?.toLong()
+    }
 }

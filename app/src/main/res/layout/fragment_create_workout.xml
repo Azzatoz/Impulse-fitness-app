@@ -61,22 +61,6 @@
         android:textSize="24sp"
         tools:ignore="VisualLintButtonSize" />
 
-    <Button
-        android:id="@+id/customButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="100dp"
-        android:background="@drawable/rounded_button"
-        android:gravity="center"
-        android:padding="4dp"
-        android:text="@string/x"
-        android:textColor="#283593"
-        android:textSize="12sp"
-        android:textStyle="bold" />
-
-
     <TextView
         android:id="@+id/countdownTextView"
         android:layout_width="wrap_content"

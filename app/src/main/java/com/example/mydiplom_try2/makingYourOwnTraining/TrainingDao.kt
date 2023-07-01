@@ -1,28 +1,26 @@
 package com.example.mydiplom_try2.makingYourOwnTraining
 
 import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
 
 @Dao
 interface TrainingDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(training: TrainingRecord)
 
     @Update
     fun update(training: TrainingRecord)
 
-    @Query("SELECT * FROM training_record")
-    fun getAll(): List<TrainingRecord>
-
-    @Query("SELECT * FROM training_record WHERE tableName = :tableName")
-    fun getByTableName(tableName: String): List<TrainingRecord>
-
-    // Дополнительные методы, которые вы хотите добавить
-    // ...
+    @Query("SELECT * FROM TableTrainingRecord")
+    fun getAllTrainingRecords(): List<TrainingRecord>
 
     @Delete
     fun delete(training: TrainingRecord)
 
-    @Query("DELETE FROM training_record")
+    @Query("DELETE FROM TableTrainingRecord")
     fun deleteAll()
 }
