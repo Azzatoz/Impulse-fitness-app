@@ -30,6 +30,7 @@ class MainRecordOfTraining : AppCompatActivity(), SensorEventListener {
     private lateinit var finishButton: Button
     private lateinit var countDownTextView: TextView
     private lateinit var tableName: String
+    private lateinit var description: String
     private lateinit var trainingDao: TrainingDao
     private lateinit var trainingTimer: TrainingTimer
     private lateinit var database: TrainingRoomDatabase // Добавляем переменную для базы данных
@@ -41,6 +42,7 @@ class MainRecordOfTraining : AppCompatActivity(), SensorEventListener {
 
         // Получаем имя таблицы/базы данных
         tableName = intent.getStringExtra("tableName") ?: ""
+        description = intent.getStringExtra("description") ?: ""
         chronometer = findViewById(R.id.chronometer)
         finishButton = findViewById(R.id.finishButton)
         countDownTextView = findViewById(R.id.countdownTextView)
@@ -104,6 +106,8 @@ class MainRecordOfTraining : AppCompatActivity(), SensorEventListener {
         buttonSave.setOnClickListener {
             saveTrainingRecordsToDatabase()
             dialog.dismiss() // Закрыть диалоговое окно
+            val intent = Intent(this@MainRecordOfTraining, CreateWorkout::class.java)
+            startActivity(intent)
         }
 
         buttonDiscard.setOnClickListener {
@@ -126,7 +130,7 @@ class MainRecordOfTraining : AppCompatActivity(), SensorEventListener {
             runOnUiThread {
                 Toast.makeText(
                     this@MainRecordOfTraining,
-                    "Все тренировки сохранены в базе данных",
+                    "Сохранение успешно",
                     Toast.LENGTH_SHORT
                 ).show()
             }

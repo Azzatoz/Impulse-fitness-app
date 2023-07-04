@@ -20,7 +20,6 @@ class Statistics : Fragment() {
         val view = inflater.inflate(R.layout.fragment_statistics, container, false)
 
         soundManager = SoundManager
-        SoundManager.init(requireContext())
 
         val backButton = view.findViewById<ImageButton>(R.id.backButton)
         backButton.setOnClickListener {

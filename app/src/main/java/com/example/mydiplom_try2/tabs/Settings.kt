@@ -23,7 +23,6 @@ class Settings : Fragment() {
         databaseHelper = DatabaseHelper(requireContext())
         heightDatabase = HeightDatabase(requireContext())
         soundManager = SoundManager
-        SoundManager.init(requireContext())
 
         val deleteDatabaseButton = view.findViewById<Button>(R.id.DeleteDatabase)
 

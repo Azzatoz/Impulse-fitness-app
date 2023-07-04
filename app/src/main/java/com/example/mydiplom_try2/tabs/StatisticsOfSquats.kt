@@ -29,7 +29,6 @@ class StatisticsOfSquats : AppCompatActivity() {
         val cursor = databaseHelper.getAllStatistics()
         val cancelButton = findViewById<ImageButton>(R.id.back_button)
         soundManager = SoundManager
-        SoundManager.init(this)
 
         cancelButton.setOnClickListener {
             soundManager.playSound()

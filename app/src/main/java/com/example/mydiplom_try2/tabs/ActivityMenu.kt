@@ -1,5 +1,4 @@
 package com.example.mydiplom_try2.tabs
-
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +27,7 @@ class MenuActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         soundManager = SoundManager
+        soundManager.initialize(this)
 
         window.decorView.apply {
             systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or

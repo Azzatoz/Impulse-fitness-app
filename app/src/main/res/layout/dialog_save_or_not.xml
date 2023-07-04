@@ -4,16 +4,6 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <Button
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_gravity="end"
-        android:layout_marginEnd="10dp"
-        android:text="@string/x"
-        android:backgroundTint="#FFFFFF"
-        android:textColor="#000000"
-        android:shadowColor="@color/black_overlay"/>
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

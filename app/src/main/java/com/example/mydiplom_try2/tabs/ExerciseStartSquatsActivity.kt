@@ -26,7 +26,7 @@ class ExerciseStartSquatsActivity : AppCompatActivity() {
         val timerTextView = findViewById<TextView>(R.id.timerTextView1) // таймер
         val startButton = findViewById<Button>(R.id.startButton1)
         soundManager = SoundManager
-        SoundManager.init(this)
+
 
         fun showTimePickerDialog() {
             soundManager.playSound()

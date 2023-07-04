@@ -1,43 +1,56 @@
 package com.example.mydiplom_try2.tabs
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageButton
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.example.mydiplom_try2.R
 import com.example.mydiplom_try2.additional_files.SoundManager
+import com.example.mydiplom_try2.workoutsList.ExistingWorkouts
+import com.example.mydiplom_try2.workoutsList.UserWorkoutsFragment
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
-class ExerciseSelectionMenu: Fragment() {
+class ExerciseSelectionMenu : Fragment(R.layout.fragment_selection_menu) {
 
+    private lateinit var viewPager: ViewPager2
+    private lateinit var tabLayout: TabLayout
     private lateinit var soundManager: SoundManager
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_selection_menu, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewPager = view.findViewById(R.id.view_pager)
+        tabLayout = view.findViewById(R.id.tab_layout)
 
-        val squatsButton = view.findViewById<ImageButton>(R.id.squats_button)
-        val armWavingButton = view.findViewById<ImageButton>(R.id.arm_waving_button)
 
         soundManager = SoundManager
-        SoundManager.init(requireContext())
 
-        squatsButton.setOnClickListener {
-            soundManager.playSound()
-            val intent = Intent(requireContext(), ExerciseStartSquatsActivity::class.java)
-            startActivity(intent)
+        setupViewPager()
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            when (position) {
+                0 -> tab.text = "Существующие тренировки"
+                1 -> tab.text = "Мои тренировки"
+            }
+        }.attach()
+    }
+
+    private fun setupViewPager() {
+        viewPager.adapter = ViewPagerAdapter(requireActivity())
+    }
+
+    private inner class ViewPagerAdapter(fragmentActivity: FragmentActivity) :
+        FragmentStateAdapter(fragmentActivity) {
+
+        private val fragmentList = listOf(ExistingWorkouts(), UserWorkoutsFragment())
+
+        override fun getItemCount(): Int {
+            return fragmentList.size
         }
 
-        armWavingButton.setOnClickListener {
-            soundManager.playSound()
-            // Implement the logic for the Statistics button
+        override fun createFragment(position: Int): Fragment {
+            return fragmentList[position]
         }
-
-        return view
     }
 }

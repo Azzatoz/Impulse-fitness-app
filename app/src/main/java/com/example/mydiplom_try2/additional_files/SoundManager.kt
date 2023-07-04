@@ -6,23 +6,30 @@ import com.example.mydiplom_try2.R
 
 object SoundManager {
     private lateinit var mediaPlayer: MediaPlayer
-    private lateinit var mediawin: MediaPlayer
+    private lateinit var mediaWin: MediaPlayer
     private var soundOn = true
 
-    fun init(context: Context) {
+    fun initialize(context: Context) {
         mediaPlayer = MediaPlayer.create(context, R.raw.click_1)
-        mediawin = MediaPlayer.create(context, R.raw.win)
+        mediaWin = MediaPlayer.create(context, R.raw.win)
+    }
+
+    fun release() {
+        mediaPlayer.release()
+        mediaWin.release()
     }
 
     fun playSound() {
         if (soundOn) {
+            mediaPlayer.seekTo(0)
             mediaPlayer.start()
         }
     }
 
     fun playWinSound() {
         if (soundOn) {
-            mediawin.start()
+            mediaWin.seekTo(0)
+            mediaWin.start()
         }
     }
 

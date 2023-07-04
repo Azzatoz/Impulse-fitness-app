@@ -70,7 +70,6 @@ class ActiveExerciseSquats : AppCompatActivity(), SensorEventListener {
         timerTextView = findViewById(R.id.timerTextView)
         squatsTextView = findViewById(R.id.scoreTextView)
         soundManager = SoundManager
-        SoundManager.init(this)
 
         val stopButton = findViewById<Button>(R.id.stopButton)
         val minutes = intent.getIntExtra("minutes", 0)
