@@ -1,56 +1,70 @@
 package com.example.mydiplom_try2.tabs
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
+import androidx.lifecycle.lifecycleScope
 import com.example.mydiplom_try2.R
-import com.example.mydiplom_try2.additional_files.SoundManager
-import com.example.mydiplom_try2.workoutsList.ExistingWorkouts
-import com.example.mydiplom_try2.workoutsList.UserWorkoutsFragment
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
+import com.example.mydiplom_try2.makingYourOwnTraining.TrainingMetaDao
+import com.example.mydiplom_try2.makingYourOwnTraining.TrainingRoomDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class ExerciseSelectionMenu : Fragment(R.layout.fragment_selection_menu) {
+class ExerciseSelectionMenu : Fragment() {
 
-    private lateinit var viewPager: ViewPager2
-    private lateinit var tabLayout: TabLayout
-    private lateinit var soundManager: SoundManager
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewPager = view.findViewById(R.id.view_pager)
-        tabLayout = view.findViewById(R.id.tab_layout)
+    private lateinit var trainingRoomDatabase: TrainingRoomDatabase
+    private lateinit var buttonContainer: LinearLayout
+    private lateinit var trainingMetaDao: TrainingMetaDao
+    private lateinit var database: TrainingRoomDatabase
 
 
-        soundManager = SoundManager
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_selection_menu, container, false)
+        buttonContainer = view.findViewById(R.id.buttonContainer)
 
-        setupViewPager()
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            when (position) {
-                0 -> tab.text = "Существующие тренировки"
-                1 -> tab.text = "Мои тренировки"
+        // Инициализируйте trainingRoomDatabase
+        trainingRoomDatabase = TrainingRoomDatabase.getDatabase(requireContext(), lifecycleScope)
+        // Инициализируйте trainingMetaDao из базы данных
+        trainingMetaDao = database.trainingMetaDao()
+
+
+        // Заполняйте кнопками список тренировок
+        populateTrainingButtons()
+
+        return view
+    }
+
+
+    private fun populateTrainingButtons() {
+        // Получите список имен тренировок из базы данных
+        lifecycleScope.launch {
+            val trainingNames = withContext(Dispatchers.IO) {
+                trainingMetaDao.getAllTrainingNames()
             }
-        }.attach()
-    }
 
-    private fun setupViewPager() {
-        viewPager.adapter = ViewPagerAdapter(requireActivity())
-    }
-
-    private inner class ViewPagerAdapter(fragmentActivity: FragmentActivity) :
-        FragmentStateAdapter(fragmentActivity) {
-
-        private val fragmentList = listOf(ExistingWorkouts(), UserWorkoutsFragment())
-
-        override fun getItemCount(): Int {
-            return fragmentList.size
-        }
-
-        override fun createFragment(position: Int): Fragment {
-            return fragmentList[position]
+            // Создайте и добавьте кнопки на экран
+            for (trainingName in trainingNames) {
+                val button = Button(requireContext())
+                button.text = trainingName
+                button.setOnClickListener {
+                    // Обработка нажатия кнопки
+                    // Перенаправьте на полную информацию о тренировке
+                    val intent = Intent(requireContext(), TrainingDetails::class.java)
+                    intent.putExtra("trainingName", trainingName)
+                    startActivity(intent)
+                }
+                buttonContainer.addView(button)
+            }
         }
     }
 }
