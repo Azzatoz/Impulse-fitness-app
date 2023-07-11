@@ -32,7 +32,7 @@ class CreateWorkout : Fragment() {
             val tableName = trainingName.text.toString() // Получаем введенное имя тренировки
             val description = trainingDescription.text.toString() // Получаем введенное описание тренировки
             if (tableName.isBlank()) {
-                Toast.makeText(requireContext(), "Имя таблицы не может быть пустым", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Название не может быть пустым", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
