@@ -19,7 +19,7 @@ interface TrainingDao {
     fun getAllTrainingRecords(): List<TrainingRecord>
 
     @Delete
-    fun delete(training: TrainingRecord)
+        fun delete(training: TrainingRecord)
 
     @Query("DELETE FROM TableTrainingRecord")
     fun deleteAll()
