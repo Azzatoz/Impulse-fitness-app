@@ -1,22 +1,28 @@
-<!-- exercise_selection_menu_fragment.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout"
+    <TextView
+        android:id="@+id/editTextText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:elevation="8dp"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar" />
+        android:ems="10"
+        android:text="@string/Trainings" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:backgroundTint="#B2D58585"
+        android:background="#B2D58585">
+
+        <LinearLayout
+            android:id="@+id/buttonContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+    </ScrollView>
 </LinearLayout>
