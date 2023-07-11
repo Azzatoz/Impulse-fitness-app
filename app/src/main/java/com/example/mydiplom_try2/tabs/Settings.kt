@@ -10,12 +10,18 @@ import com.example.mydiplom_try2.R
 import com.example.mydiplom_try2.additional_files.DatabaseHelper
 import com.example.mydiplom_try2.additional_files.HeightDatabase
 import com.example.mydiplom_try2.additional_files.SoundManager
+import com.example.mydiplom_try2.makingYourOwnTraining.TrainingRoomDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class Settings : Fragment() {
 
     private lateinit var heightDatabase: HeightDatabase
     private lateinit var databaseHelper: DatabaseHelper
     private lateinit var soundManager: SoundManager
+    private lateinit var trainingRoomDatabase: TrainingRoomDatabase
+    private lateinit var scope: CoroutineScope
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_settings, container, false)
@@ -23,6 +29,8 @@ class Settings : Fragment() {
         databaseHelper = DatabaseHelper(requireContext())
         heightDatabase = HeightDatabase(requireContext())
         soundManager = SoundManager
+        scope = CoroutineScope(Dispatchers.IO)
+        trainingRoomDatabase = TrainingRoomDatabase.getDatabase(requireContext(), scope)
 
         val deleteDatabaseButton = view.findViewById<Button>(R.id.DeleteDatabase)
 
@@ -30,9 +38,9 @@ class Settings : Fragment() {
             soundManager.playSound()
             databaseHelper.deleteDatabase(requireContext())
             heightDatabase.deleteDatabase(requireContext())
-            //val db = TrainingRoomDatabase.getDatabase(requireContext(), "my_database.db")
-            //val trainingDao = db.trainingDao()
-            //trainingDao.deleteAll()
+            scope.launch {
+                trainingRoomDatabase.trainingDao().deleteAll()
+            }
         }
 
         return view
