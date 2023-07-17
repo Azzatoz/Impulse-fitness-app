@@ -64,7 +64,7 @@ class ExerciseStartSquatsActivity : AppCompatActivity() {
         cancelButton.setOnClickListener {
             soundManager.playSound()
             val intent = Intent(
-                this, ExerciseSelectionMenu::class.java
+                this, RecordSelectionMenu::class.java
             ) // перенаправляет нажатием на exercise_selection_menu
             startActivity(intent)
         }

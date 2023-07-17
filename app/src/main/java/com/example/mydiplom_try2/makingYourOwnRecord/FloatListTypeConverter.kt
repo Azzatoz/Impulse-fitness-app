@@ -1,4 +1,4 @@
-package com.example.mydiplom_try2.makingYourOwnTraining
+package com.example.mydiplom_try2.makingYourOwnRecord
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson

@@ -10,7 +10,7 @@ import com.example.mydiplom_try2.R
 import com.example.mydiplom_try2.additional_files.DatabaseHelper
 import com.example.mydiplom_try2.additional_files.HeightDatabase
 import com.example.mydiplom_try2.additional_files.SoundManager
-import com.example.mydiplom_try2.makingYourOwnTraining.TrainingRoomDatabase
+import com.example.mydiplom_try2.makingYourOwnRecord.MyRoomDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,17 +20,17 @@ class Settings : Fragment() {
     private lateinit var heightDatabase: HeightDatabase
     private lateinit var databaseHelper: DatabaseHelper
     private lateinit var soundManager: SoundManager
-    private lateinit var trainingRoomDatabase: TrainingRoomDatabase
+    private lateinit var myRoomDatabase: MyRoomDatabase
     private lateinit var scope: CoroutineScope
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_settings, container, false)
-
+        val databaseName = arguments?.getString("databaseName") ?: ""
         databaseHelper = DatabaseHelper(requireContext())
         heightDatabase = HeightDatabase(requireContext())
         soundManager = SoundManager
         scope = CoroutineScope(Dispatchers.IO)
-        trainingRoomDatabase = TrainingRoomDatabase.getDatabase(requireContext(), scope)
+        myRoomDatabase = MyRoomDatabase.getDatabase(requireContext(), scope, databaseName)
 
         val deleteDatabaseButton = view.findViewById<Button>(R.id.DeleteDatabase)
 
@@ -39,10 +39,20 @@ class Settings : Fragment() {
             databaseHelper.deleteDatabase(requireContext())
             heightDatabase.deleteDatabase(requireContext())
             scope.launch {
-                trainingRoomDatabase.trainingDao().deleteAll()
+                myRoomDatabase.recordDao().deleteAll()
             }
         }
 
         return view
     }
+    companion object {
+        fun newInstance(databaseName: String): Settings {
+            val fragment = Settings()
+            val args = Bundle()
+            args.putString("databaseName", databaseName)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
 }

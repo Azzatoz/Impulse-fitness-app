@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.Chronometer
 import android.widget.TextView
 
-class TrainingTimer(
+class Timer(
     private val chronometer: Chronometer,
     private val countDownTextView: TextView,
     private val sensorManagerHelper: SensorManagerHelper,

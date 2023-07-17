@@ -22,7 +22,7 @@
         android:id="@+id/finishButton"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:text="Закончить запись"
+        android:text="@string/end_record"
         android:layout_marginBottom="20dp"
         android:layout_gravity="bottom"/>
 

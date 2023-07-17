@@ -1,4 +1,5 @@
 package com.example.mydiplom_try2.tabs
+
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -15,11 +16,11 @@ class MenuActivity : AppCompatActivity() {
     private lateinit var soundManager: SoundManager
 
     // Создаем экземпляры фрагментов
-    private val exerciseSelectionMenuFragment = ExerciseSelectionMenu()
+    private val recordSelectionMenuFragment = RecordSelectionMenu()
     private val statisticsFragment = Statistics()
     private val settingsFragment = Settings()
     private val profileFragment = Profile()
-    private val createWorkoutFragment = CreateWorkout()
+    private val createRecordFragment = CreateRecord()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +45,7 @@ class MenuActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.action_trainings -> {
                     // При выборе пункта показываем фрагмент ExerciseSelectionMenu
-                    showFragment(exerciseSelectionMenuFragment)
+                    showFragment(recordSelectionMenuFragment)
                     true
                 }
                 R.id.action_statistics -> {
@@ -64,7 +65,7 @@ class MenuActivity : AppCompatActivity() {
                 }
                 R.id.action_create_training -> {
                     // При выборе пункта показываем фрагмент CreateWorkout
-                    showFragment(createWorkoutFragment)
+                    showFragment(createRecordFragment)
                     true
                 }
                 else -> false
@@ -72,7 +73,7 @@ class MenuActivity : AppCompatActivity() {
         }
 
         // Показываем начальный фрагмент (в данном случае exerciseSelectionMenu)
-        showFragment(exerciseSelectionMenuFragment)
+        showFragment(recordSelectionMenuFragment)
     }
 
     // Функция для показа выбранного фрагмента

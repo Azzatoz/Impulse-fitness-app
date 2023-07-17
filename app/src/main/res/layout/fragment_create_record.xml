@@ -42,7 +42,8 @@
         android:textColorHint="#D8D2CB"
         android:backgroundTint="#DCD7D1"
         android:gravity="top|start"
-        tools:ignore="VisualLintTextFieldSize" />
+        tools:ignore="VisualLintTextFieldSize"
+        android:autofillHints="" />
 
 
     <Button

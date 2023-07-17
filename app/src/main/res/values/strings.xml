@@ -55,7 +55,7 @@
     <string name="минуты">minutes</string>
     <string name="minutes">мин</string>
     <string name="seconds">сек</string>
-    <string name="ok">ok</string>
+    <string name="ok">OK</string>
     <string name="HowManyTime">Сколько времени вы хотите заниматься</string>
     <string name="setTime">Установите время</string>
     <string name="Name_of_training">Введите название тренировки</string>
@@ -208,4 +208,6 @@
     <string name="description_not_available">Описание отсутствует..</string>
     <string name="Trainings">Тренировки</string>
     <string name="default_description">Описание отсутствует.</string>
+    <string name="delete">Удалить</string>
+    <string name="end_record">Закончить запись</string>
 </resources>

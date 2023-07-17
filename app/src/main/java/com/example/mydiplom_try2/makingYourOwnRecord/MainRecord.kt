@@ -1,4 +1,4 @@
-package com.example.mydiplom_try2.makingYourOwnTraining
+package com.example.mydiplom_try2.makingYourOwnRecord
 
 import android.app.Dialog
 import android.content.Intent
@@ -15,54 +15,60 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mydiplom_try2.R
 import com.example.mydiplom_try2.additional_files.SensorManagerHelper
-import com.example.mydiplom_try2.additional_files.TrainingTimer
-import com.example.mydiplom_try2.tabs.CreateWorkout
+import com.example.mydiplom_try2.additional_files.Timer
+import com.example.mydiplom_try2.tabs.MenuActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MainRecordOfTraining : AppCompatActivity(), SensorEventListener {
+class MainRecord : AppCompatActivity(), SensorEventListener {
+
     private lateinit var sensorManagerHelper: SensorManagerHelper
     private lateinit var gameRotationVector: Sensor
     private var gameRotationVectorValues = FloatArray(3)
-    private val trainingRecords: MutableList<TrainingRecord> = mutableListOf()
+    private val recordEntities: MutableList<RecordEntity> = mutableListOf()
     private lateinit var chronometer: Chronometer
     private lateinit var finishButton: Button
     private lateinit var countDownTextView: TextView
-    private lateinit var tableName: String
-    private lateinit var description: String
-    private lateinit var trainingDao: TrainingDao
-    private lateinit var trainingTimer: TrainingTimer
-    private lateinit var database: TrainingRoomDatabase // Добавляем переменную для базы данных
+    private lateinit var metaDao: MetaDao
+    private lateinit var timer: Timer
+    private lateinit var database: MyRoomDatabase
+    private var databaseName: String = ""
+    private var description: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_record_of_training)
+        setContentView(R.layout.activity_record)
         supportActionBar?.hide() // Скрыть заголовок
 
-        // Получаем имя таблицы/базы данных
-        tableName = intent.getStringExtra("tableName") ?: ""
-        description = intent.getStringExtra("description") ?: ""
         chronometer = findViewById(R.id.chronometer)
         finishButton = findViewById(R.id.finishButton)
         countDownTextView = findViewById(R.id.countdownTextView)
         sensorManagerHelper = SensorManagerHelper(this)
         gameRotationVector = sensorManagerHelper.getGameRotationVectorSensor()
 
-        // Инициализируем базу данных
-        database = TrainingRoomDatabase.getDatabase(this, CoroutineScope(Dispatchers.IO))
+        // Получение переданного имени таблицы из intent
+        databaseName = intent.getStringExtra("databaseName") ?: ""
+        description = intent.getStringExtra("description") ?: ""
 
-        trainingDao = database.trainingDao() // Используем DAO из базы данных
-        trainingTimer = TrainingTimer(chronometer, countDownTextView, sensorManagerHelper, this)
+        database = MyRoomDatabase.getDatabase(
+            this,
+            CoroutineScope(Dispatchers.IO),
+            databaseName
+        ) // Инициализируем базу данных
+        metaDao = database.metaDao()
+
+        timer = Timer(chronometer, countDownTextView, sensorManagerHelper, this)
         // Начинаем обратный отсчет перед запуском хронометра
         Handler(Looper.getMainLooper()).postDelayed({
-            trainingTimer.startChronometer()
+            timer.startChronometer()
             countDownTextView.text = ""
-            trainingTimer.startCountdown()
+            timer.startCountdown()
         }, 500)
+
         finishButton.setOnClickListener {
-            if (trainingTimer.isRunning()) {
-                trainingTimer.stopChronometer() // Останавливаем секундомер
+            if (timer.isRunning()) {
+                timer.stopChronometer() // Останавливаем секундомер
                 unregisterSensors() // Отключаем датчики
                 showDialog()
             }
@@ -82,6 +88,11 @@ class MainRecordOfTraining : AppCompatActivity(), SensorEventListener {
     override fun onSensorChanged(event: SensorEvent) {
         if (event.sensor.type == Sensor.TYPE_GAME_ROTATION_VECTOR) {
             gameRotationVectorValues = event.values.clone()
+            // Создание объекта TrainingRecord и сохранение его в базу данных
+            val recordEntity = RecordEntity(
+                gameRotationVectorData = gameRotationVectorValues.toList()
+            )
+            recordEntities.add(recordEntity) // Добавление записи в список trainingRecords
         }
     }
 
@@ -104,15 +115,15 @@ class MainRecordOfTraining : AppCompatActivity(), SensorEventListener {
         dialog.show()
 
         buttonSave.setOnClickListener {
-            saveTrainingRecordsToDatabase()
+            saveRecordsToDatabase()
             dialog.dismiss() // Закрыть диалоговое окно
-            val intent = Intent(this@MainRecordOfTraining, CreateWorkout::class.java)
+            val intent = Intent(this@MainRecord, MenuActivity::class.java)
             startActivity(intent)
         }
 
         buttonDiscard.setOnClickListener {
             dialog.dismiss()
-            val intent = Intent(this@MainRecordOfTraining, CreateWorkout::class.java)
+            val intent = Intent(this@MainRecord, MenuActivity::class.java)
             startActivity(intent)
         }
 
@@ -122,19 +133,40 @@ class MainRecordOfTraining : AppCompatActivity(), SensorEventListener {
     }
 
     // Сохранение записи тренировки
-    private fun saveTrainingRecordsToDatabase() {
+    private fun saveRecordsToDatabase() {
         CoroutineScope(Dispatchers.IO).launch {
-            trainingRecords.forEach { trainingRecord ->
-                trainingDao.insert(trainingRecord)
+            val recordDao = database.recordDao() // Получаем DAO для работы с таблицей Record
+
+            recordEntities.forEach { Record ->
+                recordDao.insert(Record) // Сохраняем записи тренировки в таблицу
             }
+
+            val meta = MetaEntity(
+                name_of_record = databaseName,
+                date = System.currentTimeMillis(),
+                duration = chronometer.base,
+                description = description
+            )
+            metaDao.insert(meta) // Сохраняем метаданные тренировки в таблицу
+
+            val isSavingSuccessful = true // Проверка успешного сохранения
+
             runOnUiThread {
-                Toast.makeText(
-                    this@MainRecordOfTraining,
-                    "Сохранение успешно",
-                    Toast.LENGTH_SHORT
-                ).show()
+                if (isSavingSuccessful) {
+                    Toast.makeText(
+                        this@MainRecord,
+                        "Сохранение успешно",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        this@MainRecord,
+                        "Ошибка сохранения",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
-            trainingRecords.clear() // Очищаем список записей тренировки после сохранения в базу данных
+            recordEntities.clear() // Очищаем список записей тренировки после сохранения в базу данных
         }
     }
 }

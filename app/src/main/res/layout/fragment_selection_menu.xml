@@ -15,8 +15,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="#B2D58585"
         android:backgroundTint="#B2D58585"
-        android:background="#B2D58585">
+        tools:ignore="SpeakableTextPresentCheck">
 
         <LinearLayout
             android:id="@+id/buttonContainer"

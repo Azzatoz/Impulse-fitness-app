@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.example.mydiplom_try2.R
-import com.example.mydiplom_try2.makingYourOwnTraining.MainRecordOfTraining
+import com.example.mydiplom_try2.makingYourOwnRecord.MainRecord
 
 class LoadingScreen : Activity() {
     private var progressBar: ProgressBar? = null
@@ -24,7 +24,7 @@ class LoadingScreen : Activity() {
             } catch (e: InterruptedException) {
                 e.printStackTrace()
             }
-            val intent = Intent(this@LoadingScreen, MainRecordOfTraining::class.java)
+            val intent = Intent(this@LoadingScreen, MainRecord::class.java)
             startActivity(intent)
             finish()
         }
