@@ -27,7 +27,7 @@
             android:label="@string/title_activity_record_of_training"
             android:theme="@style/MyAppTheme" />
         <activity
-            android:name=".makingYourOwnRecord.MainRecord"
+            android:name=".creatingRecord.MainRecord"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
             android:label="@string/title_activity_record_of_training"
