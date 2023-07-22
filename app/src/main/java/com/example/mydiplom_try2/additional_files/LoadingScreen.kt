@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.example.mydiplom_try2.R
-import com.example.mydiplom_try2.makingYourOwnRecord.MainRecord
+import com.example.mydiplom_try2.creatingRecord.MainRecord
 
 class LoadingScreen : Activity() {
     private var progressBar: ProgressBar? = null

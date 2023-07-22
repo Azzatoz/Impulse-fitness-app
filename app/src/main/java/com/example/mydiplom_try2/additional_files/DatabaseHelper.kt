@@ -5,10 +5,12 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.example.mydiplom_try2.creatingRecord.MyRoomDatabase
 
 
-class DatabaseHelper(context: Context) :
+class DatabaseHelper(private val context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+
 
     companion object {
         private const val DATABASE_NAME = "exercise.db"
@@ -29,7 +31,18 @@ class DatabaseHelper(context: Context) :
         db?.execSQL(createTable)
     }
 
-    fun deleteDatabase(context: Context) {
+    fun deleteDatabase(databaseName: String) {
+        context.deleteDatabase(databaseName)
+    }
+
+    fun deleteAllDatabases() {
+        // Удаление всех баз данных, созданных с помощью MyRoomDatabase
+        val roomDatabaseNames = context.databaseList().filter { it.startsWith("training_db_") }
+        for (databaseName in roomDatabaseNames) {
+            MyRoomDatabase.deleteDatabase(context, databaseName)
+        }
+
+        // Удаление базы данных
         context.deleteDatabase(DATABASE_NAME)
     }
 
