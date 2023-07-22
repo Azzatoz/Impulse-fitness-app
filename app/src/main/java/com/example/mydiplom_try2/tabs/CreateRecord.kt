@@ -11,8 +11,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.mydiplom_try2.R
 import com.example.mydiplom_try2.additional_files.SoundManager
-import com.example.mydiplom_try2.makingYourOwnRecord.MainRecord
-import com.example.mydiplom_try2.makingYourOwnRecord.MyRoomDatabase
+import com.example.mydiplom_try2.creatingRecord.MainRecord
+import com.example.mydiplom_try2.creatingRecord.MyRoomDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,12 +30,15 @@ class CreateRecord : Fragment() {
         recordName = view.findViewById(R.id.create_name_training)
         soundManager = SoundManager
 
+        // Сохраняем контекст в переменную context
+        val context = requireContext()
+
         startButton.setOnClickListener {
             val databaseName = recordName.text.toString()
             val description = trainingDescription.text.toString()
             if (databaseName.isBlank()) {
                 Toast.makeText(
-                    requireContext(),
+                    context,
                     "Название не может быть пустым",
                     Toast.LENGTH_SHORT
                 ).show()
@@ -46,32 +49,38 @@ class CreateRecord : Fragment() {
 
             scope.launch {
                 val database = MyRoomDatabase.getDatabase(
-                    requireContext(),
+                    context, // Используем сохраненный контекст
                     scope,
                     databaseName
                 )
 
-                if (isDatabaseNameExists(database)) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Запись с именем $databaseName уже существует",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                if (isDatabaseNameExists(database, databaseName)) {
+                    activity?.runOnUiThread {
+                        Toast.makeText(
+                            context,
+                            "Запись с именем $databaseName уже существует",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                     return@launch
                 }
 
-                val intent = Intent(requireContext(), MainRecord::class.java)
+
+                val intent = Intent(context, MainRecord::class.java)
                 intent.putExtra("databaseName", databaseName) // для записи в таблицу
                 intent.putExtra("description", description)
-                startActivity(intent)
+
+                activity?.runOnUiThread {
+                    startActivity(intent)
+                }
             }
         }
         return view
     }
-
-    private fun isDatabaseNameExists(database: MyRoomDatabase): Boolean {
-        val existingDatabaseName = database.metaDao().getDatabaseName()
-        return !existingDatabaseName.isNullOrEmpty()
+    private fun isDatabaseNameExists(database: MyRoomDatabase, databaseName: String): Boolean {
+        val existingDatabaseNames = database.metaDao().getAllNames()
+        return existingDatabaseNames.any { it == databaseName }
     }
+
 
 }
