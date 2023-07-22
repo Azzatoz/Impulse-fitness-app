@@ -1,65 +1,55 @@
 package com.example.mydiplom_try2.tabs
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
-import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.mydiplom_try2.R
+import com.example.mydiplom_try2.creatingRecord.MyRoomDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class RecordDetails : Fragment() {
+class RecordDetails : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.fragment_record_details)
 
-    private lateinit var recordNameTextView: TextView
-    private lateinit var recordDurationTextView: TextView
-    private lateinit var recordDescriptionTextView: TextView
+        // Получаем данные о тренировке из интента
+        val recordName = intent.getStringExtra(KEY_RECORD_NAME)!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_record_details, container, false)
-        recordNameTextView = view.findViewById(R.id.training_name_text_view)
-        recordDurationTextView = view.findViewById(R.id.training_duration_text_view)
-        recordDescriptionTextView = view.findViewById(R.id.training_description_text_view)
-        return view
-    }
+        // Выполняем запрос к базе данных для получения записи по имени тренировки
+        lifecycleScope.launch {
+            val recordMeta = withContext(Dispatchers.IO) {
+                MyRoomDatabase.getDatabase(this@RecordDetails, lifecycleScope, "").metaDao()
+                    .getRecordByName(recordName)
+            }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+            if (recordMeta != null) {
+                // Получаем длительность и описание из записи
+                val recordDuration = recordMeta.duration
+                val recordDescription = recordMeta.description
 
-        // Получаем данные о тренировке из аргументов фрагмента
-        val recordName = arguments?.getString(KEY_RECORD_NAME)
-        val recordDuration = arguments?.getLong(KEY_TRAINING_DURATION)
-        val recordDescription = arguments?.getString(KEY_TRAINING_DESCRIPTION)
+                // Устанавливаем значения полей TextView в соответствии с данными о тренировке
+                findViewById<TextView>(R.id.record_name_text_view).text = recordName
+                findViewById<TextView>(R.id.record_duration_text_view).text = formatDuration(recordDuration)
 
-        // Устанавливаем значения полей TextView в соответствии с данными о тренировке
-        recordName?.let { recordNameTextView.text = it }
-        recordDuration?.let { recordDurationTextView.text = it.toString() }
-        recordDescription?.let {
-            if (it.isBlank()) {
-                recordDescriptionTextView.text = getString(R.string.default_description)
-            } else {
-                recordDescriptionTextView.text = it
+                if (recordDescription.isNullOrBlank()) {
+                    findViewById<TextView>(R.id.record_description_text_view).text = getString(R.string.default_description)
+                } else {
+                    findViewById<TextView>(R.id.record_description_text_view).text = recordDescription
+                }
             }
         }
     }
+    private fun formatDuration(durationInSeconds: Long): String {
+        val hours = durationInSeconds / 3600
+        val minutes = (durationInSeconds % 3600) / 60
+        val seconds = durationInSeconds % 60
 
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds)
+    }
     companion object {
         private const val KEY_RECORD_NAME = "recordName"
-        private const val KEY_TRAINING_DURATION = "trainingDuration"
-        private const val KEY_TRAINING_DESCRIPTION = "trainingDescription"
-
-        fun newInstance(recordName: String, recordDuration: Long, recordDescription: String?): RecordDetails {
-            val fragment = RecordDetails()
-            val args = Bundle().apply {
-                putString(KEY_RECORD_NAME, recordName)
-                putLong(KEY_TRAINING_DURATION, recordDuration)
-                putString(KEY_TRAINING_DESCRIPTION, recordDescription)
-            }
-            fragment.arguments = args
-            return fragment
-        }
     }
 }
