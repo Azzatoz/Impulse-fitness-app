@@ -1,4 +1,4 @@
-package com.example.mydiplom_try2.makingYourOwnRecord
+package com.example.mydiplom_try2.creatingRecord
 
 import android.app.Dialog
 import android.content.Intent
@@ -8,6 +8,7 @@ import android.hardware.SensorEventListener
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import android.widget.Button
 import android.widget.Chronometer
 import android.widget.TextView
@@ -20,6 +21,8 @@ import com.example.mydiplom_try2.tabs.MenuActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class MainRecord : AppCompatActivity(), SensorEventListener {
 
@@ -35,6 +38,7 @@ class MainRecord : AppCompatActivity(), SensorEventListener {
     private lateinit var database: MyRoomDatabase
     private var databaseName: String = ""
     private var description: String = ""
+    private var countdownStartTime: Long = 0 // Время начала обратного отсчета
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,13 +62,32 @@ class MainRecord : AppCompatActivity(), SensorEventListener {
         ) // Инициализируем базу данных
         metaDao = database.metaDao()
 
-        timer = Timer(chronometer, countDownTextView, sensorManagerHelper, this)
-        // Начинаем обратный отсчет перед запуском хронометра
-        Handler(Looper.getMainLooper()).postDelayed({
-            timer.startChronometer()
-            countDownTextView.text = ""
-            timer.startCountdown()
-        }, 500)
+        timer = Timer(chronometer)
+        chronometer.visibility = View.INVISIBLE // Скрываем секундомер
+
+        // Начинаем обратный отсчет перед запуском сенсоров и секундомера
+        val handler = Handler(Looper.getMainLooper())
+        countdownStartTime = System.currentTimeMillis() // Сохраняем текущее время
+        handler.postDelayed({
+            countDownTextView.text = "3" // Отображаем "3" на экране
+            handler.postDelayed(
+                { countDownTextView.text = "2" },
+                1000
+            ) // Отображаем "2" после 1 секунды
+            handler.postDelayed(
+                { countDownTextView.text = "1" },
+                2000
+            ) // Отображаем "1" после еще 1 секунды
+            handler.postDelayed({
+                countDownTextView.text = "" // Убираем текст
+                chronometer.visibility = View.VISIBLE // Показываем хронометр
+                countdownStartTime = System.currentTimeMillis() // Сохраняем время окончания обратного отсчета
+                timer.startChronometer() // Запускаем хронометр после обратного отсчета
+                registerSensors() // Регистрируем датчики
+            }, 3000) // После еще 1 секунды (итого 3 секунды) запускаем сенсоры и хронометр
+        }, 500) // Ждем 0.5 секунды перед началом обратного отсчета
+
+
 
         finishButton.setOnClickListener {
             if (timer.isRunning()) {
@@ -135,19 +158,28 @@ class MainRecord : AppCompatActivity(), SensorEventListener {
     // Сохранение записи тренировки
     private fun saveRecordsToDatabase() {
         CoroutineScope(Dispatchers.IO).launch {
-            val recordDao = database.recordDao() // Получаем DAO для работы с таблицей Record
+            val recordDao = database.recordDao()
 
-            recordEntities.forEach { Record ->
-                recordDao.insert(Record) // Сохраняем записи тренировки в таблицу
+            recordEntities.forEach { record ->
+                val recordEntity = RecordEntity(
+                    gameRotationVectorData = record.gameRotationVectorData
+                )
+                recordDao.insert(recordEntity)
             }
+
+            val currentTime = System.currentTimeMillis()
+            val totalDurationInSeconds = (currentTime - countdownStartTime) / 1000 // Вычисляем общую длительность секундомера с учетом обратного отсчета
+
+            val sdf = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
+            val formattedDate = sdf.format(currentTime)
 
             val meta = MetaEntity(
                 name_of_record = databaseName,
-                date = System.currentTimeMillis(),
-                duration = chronometer.base,
+                date = formattedDate,
+                duration = totalDurationInSeconds,
                 description = description
             )
-            metaDao.insert(meta) // Сохраняем метаданные тренировки в таблицу
+            metaDao.insert(meta)
 
             val isSavingSuccessful = true // Проверка успешного сохранения
 
@@ -166,7 +198,7 @@ class MainRecord : AppCompatActivity(), SensorEventListener {
                     ).show()
                 }
             }
-            recordEntities.clear() // Очищаем список записей тренировки после сохранения в базу данных
+            recordEntities.clear()
         }
     }
 }
