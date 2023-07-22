@@ -10,7 +10,7 @@ import com.example.mydiplom_try2.R
 import com.example.mydiplom_try2.additional_files.DatabaseHelper
 import com.example.mydiplom_try2.additional_files.HeightDatabase
 import com.example.mydiplom_try2.additional_files.SoundManager
-import com.example.mydiplom_try2.makingYourOwnRecord.MyRoomDatabase
+import com.example.mydiplom_try2.creatingRecord.MyRoomDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,7 +36,7 @@ class Settings : Fragment() {
 
         deleteDatabaseButton.setOnClickListener {
             soundManager.playSound()
-            databaseHelper.deleteDatabase(requireContext())
+            databaseHelper.deleteAllDatabases()
             heightDatabase.deleteDatabase(requireContext())
             scope.launch {
                 myRoomDatabase.recordDao().deleteAll()

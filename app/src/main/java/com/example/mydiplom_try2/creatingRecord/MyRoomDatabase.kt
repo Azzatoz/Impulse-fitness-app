@@ -1,4 +1,4 @@
-package com.example.mydiplom_try2.makingYourOwnRecord
+package com.example.mydiplom_try2.creatingRecord
 
 import android.content.Context
 import androidx.room.Database
@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [RecordEntity::class, MetaEntity::class], version = 1, exportSchema = false)
+@Database(entities = [RecordEntity::class, MetaEntity::class], version = 2, exportSchema = false)
 abstract class MyRoomDatabase : RoomDatabase() {
 
     abstract fun recordDao(): RecordDao
