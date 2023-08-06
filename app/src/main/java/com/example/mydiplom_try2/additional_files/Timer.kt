@@ -4,9 +4,10 @@ import android.os.SystemClock
 import android.widget.Chronometer
 
 class Timer(private val chronometer: Chronometer) {
+
     private var isRunning: Boolean = false
+
     fun startChronometer() {
-        // Запуск хронометра с момента окончания обратного отсчета
         if (!isRunning) {
             chronometer.base = SystemClock.elapsedRealtime() // Сбрасываем базовое время хронометра на текущее время
             chronometer.start()
