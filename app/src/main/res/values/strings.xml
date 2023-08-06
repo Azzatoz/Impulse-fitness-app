@@ -39,7 +39,6 @@
     <string name="time">Время</string>
     <string name="count_of_squats">Кол-во приседаний</string>
     <string name="date">Дата</string>
-    <string name="todo5" />
     <string name="YourSquats">Ваши приседания</string>
     <string name="back_button">TODO</string>
     <string name="delete_database">Удалить Базу Данных</string>
@@ -210,4 +209,11 @@
     <string name="default_description">Описание отсутствует.</string>
     <string name="delete">Удалить</string>
     <string name="end_record">Закончить запись</string>
+    <string name="title_activity_playback">Playback</string>
+    <string name="_00_00">00:00</string>
+    <string name="score_placeholder">Счет: %d</string>
+    <string name="mistakes">Ошибки: %d</string>
+    <string name="Almost">Почти: %d</string>
+    <string name="Right">Верно: %d</string>
+
 </resources>
