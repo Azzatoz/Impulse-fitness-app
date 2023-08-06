@@ -1,11 +1,6 @@
 package com.example.mydiplom_try2.creatingRecord
 
 import androidx.room.*
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
 
 @Dao
 interface RecordDao {
@@ -17,7 +12,7 @@ interface RecordDao {
     fun update(training: RecordEntity)
 
     @Query("SELECT * FROM Record")
-    fun getAllTrainingRecords(): List<RecordEntity>
+    fun getAllGameRotationVectorData(): List<RecordEntity>
 
     @Delete
     fun delete(training: RecordEntity)
@@ -25,4 +20,7 @@ interface RecordDao {
     @Query("DELETE FROM Record")
     fun deleteAll()
 
+
+    @Query("SELECT * FROM Record WHERE id = :recordId")
+    fun getGameRotationVectorDataByRecordId(recordId: Int): List<RecordEntity>
 }
