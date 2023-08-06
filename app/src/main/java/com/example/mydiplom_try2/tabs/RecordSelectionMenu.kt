@@ -61,7 +61,7 @@ class RecordSelectionMenu : Fragment() {
                 button.text = recordName
                 button.setOnClickListener {
                     val intent = Intent(requireContext(), RecordDetails::class.java)
-                    intent.putExtra("recordName", recordName)
+                    intent.putExtra("recordName", recordName) // даем название первое и передаем второе
                     startActivity(intent) // Важно добавить эту строку для перехода к RecordDetailsActivity
                 }
                 button.setOnLongClickListener { view ->
