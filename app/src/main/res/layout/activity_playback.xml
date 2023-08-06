@@ -1,0 +1,79 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#FFFFFF">
+
+    <!-- Название записи -->
+    <TextView
+        android:id="@+id/record_name_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/empty_name"
+        android:textColor="#000000"
+        android:textSize="24sp" />
+
+    <!-- Счетчик верных данных -->
+    <TextView
+        android:id="@+id/correct_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/record_name_text_view"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/Right"
+        android:textColor="#2E7D32"
+        android:textSize="20sp" />
+
+    <!-- Счетчик почти верных данных -->
+    <TextView
+        android:id="@+id/almostCorrect_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/record_name_text_view"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_toEndOf="@id/correct_text_view"
+        android:text="@string/Almost"
+        android:textColor="#827717"
+        android:textSize="20sp" />
+
+    <!-- Счетчик ошибок -->
+    <TextView
+        android:id="@+id/incorrect_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/record_name_text_view"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_toEndOf="@id/almostCorrect_text_view"
+        android:text="@string/mistakes"
+        android:textColor="#DD2C00"
+        android:textSize="20sp" />
+
+    <!-- Таймер отображающий время до окончания записи -->
+    <Chronometer
+        android:id="@+id/timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/correct_text_view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:textColor="#616161"
+        android:textSize="34sp" />
+
+    <!-- Кнопка паузы -->
+    <Button
+        android:id="@+id/pause_button"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="20dp"
+        android:text="@string/stop_button"
+        android:textColor="#000000"
+        tools:ignore="VisualLintButtonSize" />
+
+</RelativeLayout>
