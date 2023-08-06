@@ -8,6 +8,7 @@
         android:id="@+id/record_name_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="@string/empty_name"
         android:textSize="24sp"
         android:textStyle="bold" />
 
@@ -15,6 +16,7 @@
         android:id="@+id/record_duration_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="@string/time"
         android:layout_marginTop="8dp"
         android:textSize="16sp" />
 
@@ -34,14 +36,15 @@
         <TextView
             android:id="@+id/record_description_text_view"
             android:layout_width="wrap_content"
+            android:text="@string/default_description"
             android:layout_height="wrap_content" />
 
     </LinearLayout>
 
     <Button
         android:id="@+id/start_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
         android:layout_gravity="center"
         android:text="@string/start" />
 
