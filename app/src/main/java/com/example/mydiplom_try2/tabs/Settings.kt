@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.example.mydiplom_try2.R
 import com.example.mydiplom_try2.additional_files.DatabaseHelper
 import com.example.mydiplom_try2.additional_files.HeightDatabase
@@ -36,10 +37,12 @@ class Settings : Fragment() {
 
         deleteDatabaseButton.setOnClickListener {
             soundManager.playSound()
-            databaseHelper.deleteAllDatabases()
-            heightDatabase.deleteDatabase(requireContext())
-            scope.launch {
-                myRoomDatabase.recordDao().deleteAll()
+            lifecycleScope.launch(Dispatchers.IO) {
+                databaseHelper.deleteAllDatabases()
+                heightDatabase.deleteDatabase(requireContext())
+                scope.launch {
+                    myRoomDatabase.recordDao().deleteAll()
+                }
             }
         }
 

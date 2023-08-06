@@ -14,6 +14,7 @@ import android.widget.Chronometer
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.mydiplom_try2.R
 import com.example.mydiplom_try2.additional_files.SensorManagerHelper
 import com.example.mydiplom_try2.additional_files.Timer
@@ -100,22 +101,28 @@ class MainRecord : AppCompatActivity(), SensorEventListener {
 
     override fun onResume() {
         super.onResume()
-        registerSensors()
+        lifecycleScope.launch(Dispatchers.IO) {
+            registerSensors()
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        unregisterSensors()
+        lifecycleScope.launch(Dispatchers.IO) {
+            unregisterSensors()
+        }
     }
 
     override fun onSensorChanged(event: SensorEvent) {
-        if (event.sensor.type == Sensor.TYPE_GAME_ROTATION_VECTOR) {
-            gameRotationVectorValues = event.values.clone()
-            // Создание объекта TrainingRecord и сохранение его в базу данных
-            val recordEntity = RecordEntity(
-                gameRotationVectorData = gameRotationVectorValues.toList()
-            )
-            recordEntities.add(recordEntity) // Добавление записи в список trainingRecords
+        lifecycleScope.launch(Dispatchers.IO) {
+            if (event.sensor.type == Sensor.TYPE_GAME_ROTATION_VECTOR) {
+                gameRotationVectorValues = event.values.clone()
+                // Создание объекта TrainingRecord и сохранение его в базу данных
+                val recordEntity = RecordEntity(
+                    gameRotationVectorData = gameRotationVectorValues.toList()
+                )
+                recordEntities.add(recordEntity) // Добавление записи в список trainingRecords
+            }
         }
     }
 

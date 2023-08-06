@@ -6,9 +6,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.lifecycleScope
 import com.example.mydiplom_try2.R
 import com.example.mydiplom_try2.additional_files.SoundManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Suppress("DEPRECATION")
 class MenuActivity : AppCompatActivity() {
@@ -72,8 +75,9 @@ class MenuActivity : AppCompatActivity() {
             }
         }
 
-        // Показываем начальный фрагмент (в данном случае exerciseSelectionMenu)
-        showFragment(recordSelectionMenuFragment)
+        lifecycleScope.launch(Dispatchers.IO) {
+            showFragment(recordSelectionMenuFragment)
+        }
     }
 
     // Функция для показа выбранного фрагмента
