@@ -1,4 +1,4 @@
-package com.example.mydiplom_try2.creatingRecord
+package com.example.mydiplom_try2.additional_files
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
@@ -24,14 +24,16 @@ class FloatListTypeConverter {
         val type = object : TypeToken<List<Float>>() {}.type
         return gson.fromJson<List<Float>>(floatListString, type)
     }
-
     @TypeConverter
-    fun fromLong(value: Long?): String? {
-        return value?.toString()
+    fun toFloatArrayConverter(floatList: List<Float>?): FloatArray? {
+        return floatList?.toFloatArray()
     }
 
-    @TypeConverter
-    fun toLong(valueString: String?): Long? {
-        return valueString?.toLong()
+    private fun List<Float>.toFloatArray(): FloatArray {
+        val floatArray = FloatArray(size)
+        for (i in indices) {
+            floatArray[i] = this[i]
+        }
+        return floatArray
     }
 }
